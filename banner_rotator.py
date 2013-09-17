@@ -18,6 +18,7 @@ class BannerRotator:
         
         for i in xrange(k):
             generated_number = random.random() * sum_weights
+            #interval = self.find_interval_naive(generated_number)
             interval = self.banners_tree.find_interval(generated_number)
             value, weight = self.banners[interval]
             self.swap(interval, uniq_banners_total - 1)
@@ -26,6 +27,13 @@ class BannerRotator:
             banners_to_show[i] = value
             
         return banners_to_show
+    
+    def find_interval_naive(self, value):
+        sum = 0
+        for i in range(len(self.banners)):
+            sum += self.banners[i][1]
+            if(sum >=value):
+                return i
     
     def __probabilities_of_banners(self, banners):
         total_weight = sum(weight for (value, weight) in banners)
@@ -43,6 +51,7 @@ class BannerRotator:
                 shifted_target_banner_index = target_banner_index
                 if(other_banner_index < shifted_target_banner_index):
                     shifted_target_banner_index -= 1
+                
                 prob_select_another_banner_first = probabilities_of_banners[other_banner_index] * self.__probability_of_show_banner(banners[0:other_banner_index] + banners[other_banner_index+1:], shifted_target_banner_index, k_blocks-1)
                 total_probability_of_show_banner += prob_select_another_banner_first
                 

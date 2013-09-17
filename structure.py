@@ -40,7 +40,6 @@ class IntervalsTree:
         self.__update(tree_j, temp)
     
     def __build(self, banners):
-        
         # Pad to power of two and add leaves with our banners to it
         size = len(banners)
         padsize = int(math.pow(2,math.ceil(math.log(size,2))))
