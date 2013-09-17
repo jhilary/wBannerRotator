@@ -5,6 +5,7 @@
 import csv
 import argparse
 import os
+from decimal import Decimal
 import banner_rotator
 
 parser = argparse.ArgumentParser()
@@ -32,21 +33,18 @@ if __name__=="__main__":
     print "\nRandom", args.blocks, "banners:" if args.blocks > 1 else "banner:" , "\n", rotator.show_banners(args.blocks)
     
     if args.statistics_csv_file:
-        start_weights = rotator.start_weights_of_show_banners()
-        print "\nStart weights:\n", start_weights
-        start_probabilities = rotator.start_probabilities_of_show_banners()
-        print "\nStart relative weights:\n", start_probabilities
-        probabilities = rotator.probabilities_of_show_banners(args.blocks)
-        print "\nAnalitically calculated probabilities that banner exists in", args.blocks, "blocks:\n", probabilities
-        frequencies = rotator.frequency_test(args.blocks)
-        print "\nExperiment proportions:\n", frequencies
         
+        start_weights = rotator.start_weights_of_show_banners()
+        start_probabilities = rotator.start_probabilities_of_show_banners()
+        probabilities = rotator.probabilities_of_show_banners(args.blocks)
+        frequencies = rotator.frequency_test(args.blocks)        
         
         statistics_data =  (start_weights, start_probabilities, probabilities, frequencies)
         statistics = []
+        precision = Decimal('.0000')
         for banner_name in [banner_name for banner_name, weight in all_banners]:
-            statistics += [[banner_name] + list( "%.4f" % dictionary[banner_name] for dictionary in statistics_data)]
-        print statistics
+            statistics += [[banner_name] + list( Decimal(dictionary[banner_name]).quantize(precision).normalize() for dictionary in statistics_data)]
+
         banners_writer = csv.writer(args.statistics_csv_file, delimiter=",")
         banners_writer.writerow(["banner","start_weights", "start_probabilities", "probabilities", "frequencies"])
         for row in statistics:
