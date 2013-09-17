@@ -38,17 +38,17 @@ if __name__=="__main__":
         start_weights = rotator.start_weights_of_show_banners()
         start_probabilities = rotator.start_probabilities_of_show_banners()
         resulted_probabilities = rotator.probabilities_of_show_banners(args.blocks)
-        proportions = {k: v/min(resulted_probabilities.values()) for k,v in resulted_probabilities.items()}
+        resulted_weights = {k: v/min(resulted_probabilities.values()) for k,v in resulted_probabilities.items()}
         
-        statistics_data =  [start_weights, start_probabilities, resulted_probabilities, proportions]
+        statistics_data =  [start_weights, start_probabilities, resulted_probabilities, resulted_weights]
         banners_writer = csv.writer(args.statistics_csv_file, delimiter=",")
         
         if args.frequencies_samples_number:
             frequencies = rotator.frequency_test(args.blocks, args.frequencies_samples_number)        
             statistics_data += [frequencies]
-            banners_writer.writerow(["banner","start_weights", "start_probabilities", "resulted_probabilities", "proportions", "frequencies"])
+            banners_writer.writerow(["banner","start_weights", "start_probabilities", "resulted_probabilities", "resulted_weights", "frequencies"])
         else:
-            banners_writer.writerow(["banner","start_weights", "start_probabilities", "resulted_probabilities", "proportions"])
+            banners_writer.writerow(["banner","start_weights", "start_probabilities", "resulted_probabilities", "resulted_weights"])
             
         statistics = []
         precision = Decimal('.0000')

@@ -1,4 +1,4 @@
-banner,start_weights,start_probabilities,resulted_probabilities,proportions
+banner,start_weights,start_probabilities,resulted_probabilities,resulted_weights
 a,4,0.1333,0.6783,3.0632
 b,7,0.2333,0.8525,3.8495
 c,2,0.0667,0.4113,1.8573
