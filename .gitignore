@@ -3,6 +3,3 @@
 
 # python #
 *.pyc
-
-# Package Files #
-statistics.csv
