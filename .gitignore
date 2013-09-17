@@ -1,0 +1,8 @@
+# Operaion system #
+.DS_Store
+
+# python #
+*.pyc
+
+# Package Files #
+statistics.csv
