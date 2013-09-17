@@ -13,7 +13,6 @@ parser.add_argument('-b', metavar='BLOCKS', help="Number of banners to show. It 
 parser.add_argument('-s', metavar='STATISTICS_FILE', help="Calculate statistics for given number of blocks and save to %(metavar)s", dest='statistics_csv_file', type=argparse.FileType('w'), required=False)
 
 args = parser.parse_args()
-print args
     
 if __name__=="__main__":
     
