@@ -24,6 +24,7 @@ class BannerRotator:
             uniq_banners_total -= 1
             sum_weights -= weight
             banners_to_show[i] = value
+            
         return banners_to_show
     
     def __probabilities_of_banners(self, banners):
@@ -49,8 +50,10 @@ class BannerRotator:
               
     def probabilities_of_show_banners(self, k_blocks):
         probabilities = [0]*len(self.banners)
+        
         for banner_index in xrange(len(self.banners)):
             probabilities[banner_index] = self.__probability_of_show_banner(self.banners, banner_index, k_blocks)
+            
         return dict(zip([banner for (banner, _ ) in self.banners], probabilities))
     
     def start_probabilities_of_show_banners(self):
@@ -59,22 +62,14 @@ class BannerRotator:
     def start_weights_of_show_banners(self):
         return dict(self.banners)
     
-    def frequency_test(self,k, amount_of_sampling):
+    def frequency_test(self, k_blocks, amount_of_sampling):
         frequencies = {banner: 0 for banner, weight in self.banners}
         
-        total_sum_weights = self.banners_tree.get_sum()
-        
         for _ in xrange(amount_of_sampling):
-            sum_weights = self.banners_tree.get_sum()
-            uniq_banners_total = len(self.banners)
-            for i in xrange(k):
-                generated_number = numpy.random.uniform() * sum_weights
-                interval = self.banners_tree.find_interval(generated_number)
-                banner, weight = self.banners[interval]
-                self.swap(interval, uniq_banners_total - 1)
+            sampled_banners = self.show_banners(k_blocks)
+            for banner in sampled_banners:
                 frequencies[banner] += 1
-                uniq_banners_total -= 1
-                sum_weights -= weight    
+                
         return {banner: float(frequency)/amount_of_sampling for banner, frequency in frequencies.items()}
         
         
