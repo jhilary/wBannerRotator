@@ -1,7 +1,9 @@
 import random
 import numpy
 import itertools
+
 import structure
+
 class BannerRotator:
     def __init__(self, banners):
         self.banners = banners
@@ -80,9 +82,4 @@ class BannerRotator:
                 frequencies[banner] += 1
                 
         return {banner: float(frequency)/amount_of_sampling for banner, frequency in frequencies.items()}
-        
-        
-        
-        
-        
         
