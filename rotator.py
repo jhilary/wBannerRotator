@@ -28,6 +28,30 @@ def generate_banners():
         for row in banners:
             banners_writer.writerow(row)
     return banners
+    
+def write_statistics(rotator, blocks, frequencies_samples_number, statistics_csv_file):
+    start_weights = rotator.start_weights_of_show_banners()
+    start_probabilities = rotator.start_probabilities_of_show_banners()
+    resulted_probabilities = rotator.probabilities_of_show_banners(blocks)
+    resulted_weights = {k: float(v)/min(resulted_probabilities.values()) for k,v in resulted_probabilities.items()}
+    
+    statistics_data =  [start_weights, start_probabilities, resulted_probabilities, resulted_weights]
+    banners_writer = csv.writer(statistics_csv_file, delimiter=",")
+    
+    if args.frequencies_samples_number:
+        frequencies = rotator.frequency_test(blocks, frequencies_samples_number)        
+        statistics_data += [frequencies]
+        banners_writer.writerow(["banner","start_weights", "start_probabilities", "resulted_probabilities", "resulted_weights", "frequencies"])
+    else:
+        banners_writer.writerow(["banner","start_weights", "start_probabilities", "resulted_probabilities", "resulted_weights"])
+        
+    statistics = []
+    precision = Decimal('.0000')
+    for banner_name in [banner_name for banner_name, weight in all_banners]:
+        statistics += [[banner_name] + list( Decimal(dictionary[banner_name]).quantize(precision).normalize() for dictionary in statistics_data)]
+
+    for row in statistics:
+        banners_writer.writerow(row)
         
 if __name__=="__main__":
     args = parseArguments()
@@ -49,26 +73,5 @@ if __name__=="__main__":
     print "\nRandom", args.blocks, "banners:" if args.blocks > 1 else "banner:" , "\n", rotator.show_banners(args.blocks)
     
     if args.statistics_csv_file:
-        start_weights = rotator.start_weights_of_show_banners()
-        start_probabilities = rotator.start_probabilities_of_show_banners()
-        resulted_probabilities = rotator.probabilities_of_show_banners(args.blocks)
-        resulted_weights = {k: float(v)/min(resulted_probabilities.values()) for k,v in resulted_probabilities.items()}
-        
-        statistics_data =  [start_weights, start_probabilities, resulted_probabilities, resulted_weights]
-        banners_writer = csv.writer(args.statistics_csv_file, delimiter=",")
-        
-        if args.frequencies_samples_number:
-            frequencies = rotator.frequency_test(args.blocks, args.frequencies_samples_number)        
-            statistics_data += [frequencies]
-            banners_writer.writerow(["banner","start_weights", "start_probabilities", "resulted_probabilities", "resulted_weights", "frequencies"])
-        else:
-            banners_writer.writerow(["banner","start_weights", "start_probabilities", "resulted_probabilities", "resulted_weights"])
-            
-        statistics = []
-        precision = Decimal('.0000')
-        for banner_name in [banner_name for banner_name, weight in all_banners]:
-            statistics += [[banner_name] + list( Decimal(dictionary[banner_name]).quantize(precision).normalize() for dictionary in statistics_data)]
-
-        for row in statistics:
-            banners_writer.writerow(row)
+        write_statistics(rotator, args.blocks, args.frequencies_samples_number, args.statistics_csv_file)
         args.statistics_csv_file.close()

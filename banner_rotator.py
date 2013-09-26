@@ -34,7 +34,7 @@ class BannerRotator:
         sum = 0
         for i in range(len(self.banners)):
             sum += self.banners[i][1]
-            if(sum >=value):
+            if sum >=value:
                 return i
     
     def __probabilities_of_banners(self, banners):
