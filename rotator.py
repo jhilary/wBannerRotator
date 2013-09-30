@@ -38,7 +38,7 @@ def write_statistics(rotator, blocks, frequencies_samples_number, statistics_csv
     statistics_data =  [start_weights, start_probabilities, resulted_probabilities, resulted_weights]
     banners_writer = csv.writer(statistics_csv_file, delimiter=",")
     
-    if args.frequencies_samples_number:
+    if frequencies_samples_number:
         frequencies = rotator.frequency_test(blocks, frequencies_samples_number)        
         statistics_data += [frequencies]
         banners_writer.writerow(["banner","start_weights", "start_probabilities", "resulted_probabilities", "resulted_weights", "frequencies"])
